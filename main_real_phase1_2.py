@@ -346,7 +346,7 @@ for epoch in range(1, cfg.epochs + 1):
         refined_samples = []
         model.eval()
 
-        des = os.path.join("phase1", cfg.dataset, str(cfg.seed))
+        des = os.path.join("phase1_2", cfg.dataset, str(cfg.seed))
         os.makedirs(des, exist_ok=True)
         if cfg.dataset.startswith("cifar"):
             print("Phase 2 begin...")
