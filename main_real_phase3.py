@@ -58,7 +58,7 @@ def train(epoch, dataloader, lambda_2):
         outputs = model(inputs)
         _, predicted = outputs.max(1)
         
-        total_loss = 0.0
+        total_loss = torch.tensor(0.0, requires_grad=True, device='cuda')
         
         alpha = 0.20
         clean_mask = total_clean_idx[index].cuda()
@@ -81,7 +81,7 @@ def train(epoch, dataloader, lambda_2):
                 (1 - lam) * criterion(outputs_clean, targets_b)
             ).mean()
 
-            total_loss += loss_clean
+            total_loss = total_loss + loss_clean
         
         if cfg.dataset.startswith("cifar"):
             high_conf_mask = torch.zeros_like(clean_mask, dtype=torch.bool)
@@ -109,7 +109,7 @@ def train(epoch, dataloader, lambda_2):
                     kl_qp = F.kl_div(log_targets, preds_clamped, reduction='batchmean')
 
                     sym_kl = 0.5 * (kl_pq + kl_qp)
-                    total_loss += lambda_2 * sym_kl      
+                    total_loss = total_loss + lambda_2 * sym_kl      
 
         total_loss.backward()
         optimizer.step()
